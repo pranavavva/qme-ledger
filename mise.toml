@@ -10,26 +10,47 @@ _.file = '.env'
 [tasks.makemigrations]
 description = "Make backend migrations"
 dir = "backend"
+wait_for = ["install:backend"]
 run = "uv run manage.py makemigrations"
 
 [tasks.migrate]
 description = "Apply migrations"
 dir = "backend"
-wait_for = "makemigrations"
+wait_for = ["makemigrations", "install:backend"]
 run = "uv run manage.py migrate"
 
 [tasks."dev:backend"]
 description = "Run the backend Django server"
 dir = "backend"
 depends = ["migrate"]
+wait_for = ["install:backend"]
 run = "uv run manage.py runserver"
 
 [tasks."dev:frontend"]
 description = "Run the frontend Bun server"
 dir = "frontend"
+wait_for = ["install:frontend"]
 run = "bun run dev"
 
 [tasks.dev]
 description = "Start both frontend and backend dev servers"
 depends = ["dev:*"]
 
+[tasks."install:frontend"]
+description = "Sync frontend dependencies"
+dir = "frontend"
+run = "bun install"
+
+[tasks."install:backend"]
+description = "Sync backend dependencies"
+dir = "backend"
+run = "uv sync"
+
+[tasks."install"]
+description = "Sync all dependencies"
+depends = ["install:backend", "install:frontend"]
+
+[tasks.manage]
+description = "Shortcut for django manage.py"
+dir = "backend"
+run = "uv run manage.py"
