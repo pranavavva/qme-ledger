@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     "django.contrib.postgres",
     "qme_ledger",
     "rest_framework",
-    "restframework-simplejwt",
 ]
 
 MIDDLEWARE = [
